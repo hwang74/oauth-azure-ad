@@ -43,7 +43,7 @@ export const msalConfig: Configuration = {
 
 export const protectedResources = {
   todoListApi: {
-    endpoint: "https://localhost:44351/api/todolist",
+    endpoint: "http://localhost:44351/api/todolist",
     scopes: ["https://hwangb2c.onmicrosoft.com/31a16495-2f19-4273-973d-d85e8450cfdc/access_on_behalf_of_user"],
   },
 }
