@@ -77,7 +77,7 @@ namespace TodoListAPI
                 c.RoutePrefix = string.Empty;
             });
             app.UseCors("default");
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
