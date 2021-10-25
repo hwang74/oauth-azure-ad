@@ -1,3 +1,5 @@
+# This is forked from Microsoft's Github 
+
 # Angular single-page application that authenticates users with Azure AD B2C and calls a protected .NET Core web API
 
  1. [Overview](#overview)
