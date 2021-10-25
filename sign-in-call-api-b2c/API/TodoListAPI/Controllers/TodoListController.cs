@@ -14,12 +14,11 @@ using Microsoft.Identity.Web.Resource;
 namespace TodoListAPI.Controllers
 {
     [Authorize]
+    [RequiredScope(RequiredScopesConfigurationKey = "AzureAdB2C:Scopes")]
     [Route("api/[controller]")]
     [ApiController]
     public class TodoListController : ControllerBase
     {
-        static readonly string[] scopeRequiredByApi = new string[] { "access_on_behalf_of_user" };
-
         private readonly TodoContext _context;
         private readonly IConfiguration _configuration;
 
@@ -32,7 +31,6 @@ namespace TodoListAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodoItems()
         {
-            HttpContext.VerifyUserHasAnyAcceptedScope(scopeRequiredByApi);
             string owner = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             return await _context.TodoItems.Where(item => item.Owner == owner).ToListAsync();
         }
@@ -41,8 +39,6 @@ namespace TodoListAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TodoItem>> GetTodoItem(int id)
         {
-            HttpContext.VerifyUserHasAnyAcceptedScope(scopeRequiredByApi);
- 
             var todoItem = await _context.TodoItems.FindAsync(id);
 
             if (todoItem == null)
@@ -59,8 +55,6 @@ namespace TodoListAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTodoItem(int id, TodoItem todoItem)
         {
-            HttpContext.VerifyUserHasAnyAcceptedScope(scopeRequiredByApi);
-
             if (id != todoItem.Id)
             {
                 return BadRequest();
@@ -93,7 +87,6 @@ namespace TodoListAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem todoItem)
         {
-            HttpContext.VerifyUserHasAnyAcceptedScope(scopeRequiredByApi);
             string owner = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             todoItem.Owner = owner;
             todoItem.Status = false;
@@ -108,8 +101,6 @@ namespace TodoListAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<TodoItem>> DeleteTodoItem(int id)
         {
-            HttpContext.VerifyUserHasAnyAcceptedScope(scopeRequiredByApi);
-
             var todoItem = await _context.TodoItems.FindAsync(id);
             if (todoItem == null)
             {

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
+using Microsoft.AspNetCore.Authorization;
 using TodoListAPI.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
@@ -27,19 +28,29 @@ namespace TodoListAPI
             // Adds Microsoft Identity platform (AAD v2.0) support to protect this Api
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddMicrosoftIdentityWebApi(options =>
-            {
-                Configuration.Bind("AzureAdB2C", options);
-
-                options.TokenValidationParameters.NameClaimType = "name";
-            },
-            options => { Configuration.Bind("AzureAdB2C", options); });
+                        {
+                            Configuration.Bind("AzureAdB2C", options);
+                            options.TokenValidationParameters.NameClaimType = "name";
+                        },
+                        options => { Configuration.Bind("AzureAdB2C", options); }
+                    );
 
             // Creating policies that wraps the authorization requirements
-            services.AddAuthorization();
+            services.AddAuthorization(options =>
+            {
+
+                options.DefaultPolicy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+
+                options.FallbackPolicy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+            });
 
             services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("TodoList"));
 
-            services.AddControllers(options => { Configuration.Bind("AzureAdB2C", options); });
+            services.AddControllers();
             
             // Allowing CORS for all domains and methods for the purpose of the sample
             // In production, modify this with the actual domains you want to allow
