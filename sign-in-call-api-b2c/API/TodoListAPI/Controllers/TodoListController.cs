@@ -31,7 +31,7 @@ namespace TodoListAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodoItems()
         {
-            string owner = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            string owner = HttpContext.User.Identity.Name;
             return await _context.TodoItems.Where(item => item.Owner == owner).ToListAsync();
         }
 
@@ -87,7 +87,7 @@ namespace TodoListAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem todoItem)
         {
-            string owner = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            string owner = HttpContext.User.Identity.Name;
             todoItem.Owner = owner;
             todoItem.Status = false;
 
