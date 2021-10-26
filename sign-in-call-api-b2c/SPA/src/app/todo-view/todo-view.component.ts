@@ -15,7 +15,7 @@ export class TodoViewComponent implements OnInit {
 
   todos: Todo[] = [];
 
-  displayedColumns = ['status', 'description', 'edit', 'remove'];
+  displayedColumns = ['status', 'description', 'owner', 'edit', 'remove'];
 
   constructor(private service: TodoService) { }
 

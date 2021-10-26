@@ -13,6 +13,7 @@ export class TodoEditComponent implements OnInit {
 
   todo: Todo = {
     id: 1,
+    owner: "",
     description: "undefined",
     status: false,
   };
